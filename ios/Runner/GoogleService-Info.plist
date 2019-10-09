@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>290083337023-pc794eo36ugr9fp8v0a5rnvdeln16fk5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.290083337023-pc794eo36ugr9fp8v0a5rnvdeln16fk5</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>290083337023-mv3mk8ldtkjp8hpfbvl4k10kv4d7e6v5.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAiBvXImAD2NeF9GxErWYTlpkw7BCY9weY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>290083337023</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.cytex.minorapp</string>
+	<key>PROJECT_ID</key>
+	<string>thelma-minor-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>thelma-minor-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:290083337023:ios:780854a0fb6873cdf1998a</string>
+	<key>DATABASE_URL</key>
+	<string>https://thelma-minor-app.firebaseio.com</string>
+</dict>
+</plist>

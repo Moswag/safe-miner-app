@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "290083337023",
+    "firebase_url": "https://thelma-minor-app.firebaseio.com",
+    "project_id": "thelma-minor-app",
+    "storage_bucket": "thelma-minor-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290083337023:android:3678067bd92174e2f1998a",
+        "android_client_info": {
+          "package_name": "zw.co.cytex.androidminor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290083337023-mv3mk8ldtkjp8hpfbvl4k10kv4d7e6v5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "zw.co.cytex.androidminor",
+            "certificate_hash": "8c6371fc3a4360ee04ef578cee99eca419667923"
+          }
+        },
+        {
+          "client_id": "290083337023-u8c67cujjq7kr41bg3bun3aka1bmuuo0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVjRPDuQsKoTRPkLbZHGUn75HmccG0ycs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290083337023-u8c67cujjq7kr41bg3bun3aka1bmuuo0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
