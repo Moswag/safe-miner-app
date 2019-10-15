@@ -62,23 +62,23 @@ class WelcomeScreen extends StatelessWidget {
               color: Color.fromRGBO(212, 20, 15, 1.0),
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40.0),
-            child: CustomFlatButton(
-              title: "Sign Up",
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.of(context).pushNamed("/signup");
-              },
-              splashColor: Colors.black12,
-              borderColor: Colors.black12,
-              borderWidth: 2,
-              color: Color.fromRGBO(212, 20, 15, 1.0),
-            ),
-          ),
+//          Padding(
+//            padding:
+//                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 40.0),
+//            child: CustomFlatButton(
+//              title: "Sign Up",
+//              fontSize: 22,
+//              fontWeight: FontWeight.w700,
+//              textColor: Colors.white,
+//              onPressed: () {
+//                Navigator.of(context).pushNamed("/signup");
+//              },
+//              splashColor: Colors.black12,
+//              borderColor: Colors.black12,
+//              borderWidth: 2,
+//              color: Color.fromRGBO(212, 20, 15, 1.0),
+//            ),
+//          ),
         ],
       ),
     );

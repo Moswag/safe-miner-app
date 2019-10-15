@@ -1,7 +1,9 @@
-import 'package:android_minor/ui/screens/main_screen.dart';
 import 'package:android_minor/ui/screens/welcome_screen.dart';
+import 'package:android_minor/util/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../root_page.dart';
 
 class RootScreen extends StatefulWidget {
   @override
@@ -20,8 +22,8 @@ class _RootScreenState extends State<RootScreen> {
           );
         } else {
           if (snapshot.hasData) {
-            return new MainScreen(
-              firebaseUser: snapshot.data,
+            return RootPage(
+              auth: Auth(),
             );
           } else {
             return WelcomeScreen();

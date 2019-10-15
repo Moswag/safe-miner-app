@@ -1,37 +1,57 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+User userFromJson(String str) {
+  final jsonData = json.decode(str);
+  return User.fromJson(jsonData);
+}
+
+String userToJson(User data) {
+  final dyn = data.toJson();
+  return json.encode(dyn);
+}
+
 class User {
-  final String userID;
-  final String firstName;
-  final String email;
-  final String profilePictureURL;
+  String userId;
+  String name;
+  String phonenumber;
+  String email;
+  String role;
+  String companyId;
+  bool isEmployee;
+  String employeeNumb;
 
-  User({
-    this.userID,
-    this.firstName,
-    this.email,
-    this.profilePictureURL,
-  });
+  User(
+      {this.userId,
+      this.name,
+      this.phonenumber,
+      this.email,
+      this.role,
+      this.companyId,
+      this.isEmployee,
+      this.employeeNumb});
 
-  Map<String, Object> toJson() {
-    return {
-      'userID': userID,
-      'firstName': firstName,
-      'email': email == null ? '' : email,
-      'profilePictureURL': profilePictureURL,
-      'appIdentifier': 'flutter-onboarding'
-    };
-  }
+  factory User.fromJson(Map<String, dynamic> json) => new User(
+      userId: json["userId"],
+      name: json["name"],
+      phonenumber: json["phonenumber"],
+      email: json["email"],
+      role: json["role"],
+      companyId: json["companyId"],
+      isEmployee: json["isEmployee"],
+      employeeNumb: json["employeeNumb"]);
 
-  factory User.fromJson(Map<String, Object> doc) {
-    User user = new User(
-      userID: doc['userID'],
-      firstName: doc['firstName'],
-      email: doc['email'],
-      profilePictureURL: doc['profilePictureURL'],
-    );
-    return user;
-  }
+  Map<String, dynamic> toJson() => {
+        "userId": userId,
+        "name": name,
+        "phonenumber": phonenumber,
+        "email": email,
+        "role": role,
+        "companyId": companyId,
+        "isEmployee": isEmployee,
+        "employeeNumb": employeeNumb
+      };
 
   factory User.fromDocument(DocumentSnapshot doc) {
     return User.fromJson(doc.data);

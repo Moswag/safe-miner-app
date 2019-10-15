@@ -1,12 +1,15 @@
-import 'dart:core';
-
-import 'package:android_minor/business/auth.dart';
-import 'package:android_minor/business/validator.dart';
+import 'package:android_minor/constants/app_constants.dart';
+import 'package:android_minor/constants/route_constants.dart';
 import 'package:android_minor/models/user.dart';
-import 'package:android_minor/ui/widgets/custom_alert_dialog.dart';
+import 'package:android_minor/ui/screens/sign_in_screen.dart';
 import 'package:android_minor/ui/widgets/custom_flat_button.dart';
-import "package:android_minor/ui/widgets/custom_text_field.dart";
-import "package:flutter/material.dart";
+import 'package:android_minor/ui/widgets/loading.dart';
+import 'package:android_minor/util/alert_dialog.dart';
+import 'package:android_minor/util/auth.dart';
+import 'package:android_minor/util/state_widget.dart';
+import 'package:android_minor/util/validator.dart';
+import 'package:flushbar/flushbar.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -14,205 +17,248 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _fullname = new TextEditingController();
-  final TextEditingController _number = new TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _name = new TextEditingController();
+  final TextEditingController _phonenumber = new TextEditingController();
   final TextEditingController _email = new TextEditingController();
+  final TextEditingController _employeenum = new TextEditingController();
   final TextEditingController _password = new TextEditingController();
-  CustomTextField _nameField;
-  CustomTextField _phoneField;
-  CustomTextField _emailField;
-  CustomTextField _passwordField;
-  bool _blackVisible = false;
-  VoidCallback onBackPress;
+  //final TextEditingController _access = new TextEditingController();
 
+  bool _autoValidate = false;
+  bool _loadingVisible = false;
   @override
   void initState() {
     super.initState();
-
-    onBackPress = () {
-      Navigator.of(context).pop();
-    };
-
-    _nameField = new CustomTextField(
-      baseColor: Colors.grey,
-      borderColor: Colors.grey[400],
-      errorColor: Colors.red,
-      controller: _fullname,
-      hint: "Full Name",
-      validator: Validator.validateName,
-    );
-    _phoneField = new CustomTextField(
-      baseColor: Colors.grey,
-      borderColor: Colors.grey[400],
-      errorColor: Colors.red,
-      controller: _number,
-      hint: "Phone Number",
-      validator: Validator.validateNumber,
-      inputType: TextInputType.number,
-    );
-    _emailField = new CustomTextField(
-      baseColor: Colors.grey,
-      borderColor: Colors.grey[400],
-      errorColor: Colors.red,
-      controller: _email,
-      hint: "E-mail Adress",
-      inputType: TextInputType.emailAddress,
-      validator: Validator.validateEmail,
-    );
-    _passwordField = CustomTextField(
-      baseColor: Colors.grey,
-      borderColor: Colors.grey[400],
-      errorColor: Colors.red,
-      controller: _password,
-      obscureText: true,
-      hint: "Password",
-      validator: Validator.validatePassword,
-    );
   }
 
-  @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: onBackPress,
-      child: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            Stack(
-              alignment: Alignment.topLeft,
-              children: <Widget>[
-                ListView(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 70.0, bottom: 10.0, left: 10.0, right: 10.0),
-                      child: Image.asset(
-                        'assets/images/minor.png',
-                        width: 150,
-                        height: 150,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 20.0, left: 15.0, right: 15.0),
-                      child: _nameField,
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
-                      child: _phoneField,
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
-                      child: _emailField,
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
-                      child: _passwordField,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 25.0, horizontal: 40.0),
-                      child: CustomFlatButton(
-                        title: "Sign Up",
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          _signUp(
-                              fullname: _fullname.text,
-                              email: _email.text,
-                              number: _number.text,
-                              password: _password.text);
-                        },
-                        splashColor: Colors.black12,
-                        borderColor: Color.fromRGBO(59, 89, 152, 1.0),
-                        borderWidth: 0,
-                        color: Color.fromRGBO(59, 89, 152, 1.0),
-                      ),
-                    ),
-                  ],
-                ),
-                SafeArea(
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: onBackPress,
-                  ),
-                ),
-              ],
-            ),
-            Offstage(
-              offstage: !_blackVisible,
-              child: GestureDetector(
-                onTap: () {},
-                child: AnimatedOpacity(
-                  opacity: _blackVisible ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 400),
-                  curve: Curves.ease,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    color: Colors.black54,
+    final logo = Hero(
+      tag: 'hero',
+      child: Image(
+        image: AssetImage(AppConstants.APP_LOGO),
+        width: 255,
+        height: 130,
+      ),
+    );
+
+    final fieldName = TextFormField(
+      autofocus: false,
+      textCapitalization: TextCapitalization.words,
+      controller: _name,
+      validator: Validator.validateName,
+      decoration: InputDecoration(
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 5.0),
+          child: Icon(
+            Icons.person,
+            color: Colors.grey,
+          ), // icon is 48px widget.
+        ), // icon is 48px widget.
+        hintText: 'First Name',
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+      ),
+    );
+
+    final fieldPhonenumber = TextFormField(
+      autofocus: false,
+      keyboardType: TextInputType.number,
+      controller: _phonenumber,
+      validator: Validator.validateNumber,
+      decoration: InputDecoration(
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 5.0),
+          child: Icon(
+            Icons.phone,
+            color: Colors.grey,
+          ), // icon is 48px widget.
+        ), // icon is 48px widget.
+        hintText: 'Phonenumber',
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+      ),
+    );
+
+    final fieldEmail = TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      autofocus: false,
+      controller: _email,
+      validator: Validator.validateEmail,
+      decoration: InputDecoration(
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 5.0),
+          child: Icon(
+            Icons.email,
+            color: Colors.grey,
+          ), // icon is 48px widget.
+        ), // icon is 48px widget.
+        hintText: 'Email',
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+      ),
+    );
+
+    final fieldEmployeeNum = TextFormField(
+      keyboardType: TextInputType.number,
+      autofocus: false,
+      controller: _employeenum,
+      //validator: Validator.validateNumber,
+      decoration: InputDecoration(
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 5.0),
+          child: Icon(
+            Icons.perm_identity,
+            color: Colors.grey,
+          ), // icon is 48px widget.
+        ), // icon is 48px widget.
+        hintText: 'Employee ID',
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+      ),
+    );
+
+    final fieldPassword = TextFormField(
+      autofocus: false,
+      obscureText: true,
+      controller: _password,
+      validator: Validator.validatePassword,
+      decoration: InputDecoration(
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 5.0),
+          child: Icon(
+            Icons.lock,
+            color: Colors.grey,
+          ), // icon is 48px widget.
+        ), // icon is 48px widget.
+        hintText: 'Password',
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+      ),
+    );
+
+    final signUpButton = CustomFlatButton(
+      title: "Sign Up",
+      fontSize: 22,
+      fontWeight: FontWeight.w700,
+      textColor: Colors.white,
+      onPressed: () {
+        User user = new User();
+        user.name = _name.text;
+        user.phonenumber = _phonenumber.text;
+        user.email = _email.text;
+        user.employeeNumb = _employeenum.text;
+
+        _emailSignUp(user: user, password: _password.text, context: context);
+      },
+      splashColor: Colors.black12,
+      borderColor: Color.fromRGBO(212, 20, 15, 1.0),
+      borderWidth: 0,
+      color: Color.fromRGBO(212, 20, 15, 1.0),
+    );
+
+    final signInLabel = FlatButton(
+      child: Text(
+        'Have an Account? Sign In.',
+        style: TextStyle(color: Colors.blue),
+      ),
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => SignInScreen()));
+      },
+    );
+
+    return Scaffold(
+      body: LoadingScreen(
+          child: Form(
+            key: _formKey,
+            autovalidate: _autoValidate,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      logo,
+                      SizedBox(height: 48.0),
+                      fieldName,
+                      SizedBox(height: 24.0),
+                      fieldPhonenumber,
+                      SizedBox(height: 24.0),
+                      fieldEmail,
+                      SizedBox(height: 24.0),
+                      fieldEmployeeNum,
+                      SizedBox(height: 24.0),
+                      fieldPassword,
+                      SizedBox(height: 20.0),
+                      signUpButton,
+                      signInLabel
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+          inAsyncCall: _loadingVisible),
     );
   }
 
-  void _changeBlackVisible() {
+  Future<void> _changeLoadingVisible() async {
     setState(() {
-      _blackVisible = !_blackVisible;
+      _loadingVisible = !_loadingVisible;
     });
   }
 
-  void _signUp(
-      {String fullname,
-      String number,
-      String email,
-      String password,
-      BuildContext context}) async {
-    if (Validator.validateName(fullname) &&
-        Validator.validateEmail(email) &&
-        Validator.validateNumber(number) &&
-        Validator.validatePassword(password)) {
+  void _emailSignUp({User user, String password, BuildContext context}) async {
+    if (_formKey.currentState.validate()) {
       try {
         SystemChannels.textInput.invokeMethod('TextInput.hide');
-        _changeBlackVisible();
-        await Auth.signUp(email, password).then((uID) {
-          Auth.addUser(new User(
-              userID: uID,
-              email: email,
-              firstName: fullname,
-              profilePictureURL: ''));
-          onBackPress();
-        });
-      } catch (e) {
-        print("Error in sign up: $e");
-        String exception = Auth.getExceptionText(e);
-        _showErrorAlert(
-          title: "Signup failed",
-          content: exception,
-          onPressed: _changeBlackVisible,
-        );
-      }
-    }
-  }
+        await _changeLoadingVisible();
+        //need await so it has chance to go through error if found.
+//        await Auth.checkCompanyId(user.employeeNumb).then((onValue) async {
+//          if (!(onValue == AppConstants.NOT_EXIST)) {
+        await Auth.signUp(user.email, password).then((uID) {
+          user.role = AppConstants.USER_EMPLOYEE;
+          user.companyId = '1';
+          user.isEmployee = true;
+          user.userId = uID;
 
-  void _showErrorAlert({String title, String content, VoidCallback onPressed}) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return CustomAlertDialog(
-          content: content,
-          title: title,
-          onPressed: onPressed,
-        );
-      },
-    );
+          Auth.addUserSettingsDB(user);
+        });
+        //now automatically login user too
+        await StateWidget.of(context).logInUser(user.email, password);
+
+        AlertDiag.showAlertDialog(context, 'Status', 'User Successfully Added',
+            RouteConstants.USER_SIGNIN);
+//          } else {
+//            Flushbar(
+//                    title: "Sign Up Error",
+//                    message: "Employee ID do not exist",
+//                    duration: Duration(seconds: 5))
+//                .show(context);
+//          }
+//        });
+
+        //redirect to login
+        // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>SignInScreen()));
+      } catch (e) {
+        _changeLoadingVisible();
+        // print("Sign Up Error: $e");
+        String exception =
+//            "No network, please make sure you have internet";
+            Auth.getExceptionText(e);
+        Flushbar(
+                title: "Sign Up Error",
+                message: exception,
+                duration: Duration(seconds: 5))
+            .show(context);
+      }
+    } else {
+      setState(() => _autoValidate = true);
+    }
   }
 }

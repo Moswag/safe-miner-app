@@ -25,7 +25,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     lintOptions {
         disable 'InvalidPackage'
@@ -35,10 +35,32 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "zw.co.cytex.androidminor"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    configurations.all {
+        resolutionStrategy {
+            resolutionStrategy.eachDependency { details ->
+                if (details.requested.group == 'androidx.core') {
+                    details.useVersion "1.0.1"
+                }
+                if (details.requested.group == 'androidx.lifecycle') {
+                    details.useVersion "2.0.0"
+                }
+                if (details.requested.group == 'androidx.versionedparcelable') {
+                    details.useVersion "1.0.0"
+                }
+                if (details.requested.group == 'androidx.fragment') {
+                    details.useVersion "1.0.0"
+                }
+                if (details.requested.group == 'androidx.appcompat') {
+                    details.useVersion "1.0.1"
+                }
+            }
+        }
     }
 
     buildTypes {
@@ -63,7 +85,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 	implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation "androidx.annotation:annotation:1.1.0"
+    implementation "com.google.android.gms:play-services-gcm:16.0.0"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 }
 
-
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
 apply plugin: 'com.google.gms.google-services'

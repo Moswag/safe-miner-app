@@ -1,13 +1,12 @@
 import 'dart:math' as math;
 
+import 'package:android_minor/ui/screens/employee/employee_drawer.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:tflite/tflite.dart';
 
-import 'app_drawer.dart';
 import 'bndbox.dart';
 import 'camera.dart';
-import 'models/user.dart';
 import 'models.dart';
 
 class HomePage extends StatefulWidget {
@@ -82,9 +81,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Detect Objects"),
         centerTitle: true,
       ),
-      drawer: MinerDrawer(
-        user: new User(firstName: 'Thelma', email: 'thelma@gmail.com'),
-      ),
+      drawer: EmployeeDrawer(),
       body: _model == ""
           ? Center(
               child: Column(
