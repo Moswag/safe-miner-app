@@ -22,6 +22,13 @@ class _MapsSampleState extends State<MapsSample> {
     _controller.complete(controller);
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _goToParis();
+  }
+
   void _changeMapType() {
     setState(() {
       _defaultMapType = _defaultMapType == MapType.normal

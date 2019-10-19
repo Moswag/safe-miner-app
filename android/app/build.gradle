@@ -85,9 +85,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 	implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation "androidx.annotation:annotation:1.1.0"
-    implementation "com.google.android.gms:play-services-gcm:16.0.0"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+
 }
 
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+
 apply plugin: 'com.google.gms.google-services'
